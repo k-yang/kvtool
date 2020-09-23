@@ -4,8 +4,8 @@ go 1.13
 
 require (
 	github.com/Jeffail/gabs/v2 v2.6.0
-	github.com/btcsuite/btcd v0.20.1-beta // indirect
 	github.com/cosmos/cosmos-sdk v0.38.4
+	github.com/kava-labs/binance-chain-go-sdk v1.2.5-kava
 	github.com/kava-labs/kava v0.8.1
 	github.com/otiai10/copy v1.2.0
 	github.com/spf13/cobra v1.0.0

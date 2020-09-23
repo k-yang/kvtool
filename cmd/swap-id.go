@@ -11,7 +11,8 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 
-	"github.com/kava-labs/kvtool/binance"
+	bnbtypes "github.com/kava-labs/binance-chain-go-sdk/common/types"
+	"github.com/kava-labs/binance-chain-go-sdk/types/msg"
 )
 
 // SwapIDCmd returns a command to calculate a bep3 swap ID for binance and kava chains.
@@ -23,7 +24,7 @@ func SwapIDCmd(cdc *codec.Codec) *cobra.Command {
 	if err != nil {
 		panic(err.Error())
 	}
-	bnbDeputy, err := binance.AccAddressFromBech32("bnb1jh7uv2rm6339yue8k4mj9406k3509kr4wt5nxn")
+	bnbDeputy, err := bnbtypes.AccAddressFromBech32("bnb1jh7uv2rm6339yue8k4mj9406k3509kr4wt5nxn")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -43,7 +44,7 @@ func SwapIDCmd(cdc *codec.Codec) *cobra.Command {
 
 			// try and decode the bech32 address as either kava or bnb
 			addressKava, errKava := sdk.AccAddressFromBech32(args[1])
-			addressBnb, errBnb := binance.AccAddressFromBech32(args[1])
+			addressBnb, errBnb := bnbtypes.AccAddressFromBech32(args[1])
 
 			// fail if both decoding failed
 			isKavaAddress := errKava == nil && errBnb != nil
@@ -59,12 +60,12 @@ func SwapIDCmd(cdc *codec.Codec) *cobra.Command {
 					return fmt.Errorf("input address cannot be deputy address: %s", kavaDeputy)
 				}
 				swapIDKava = types.CalculateSwapID(randomNumberHash, addressKava, bnbDeputy.String())
-				swapIDBnb = binance.CalculateSwapID(randomNumberHash, bnbDeputy, addressKava.String())
+				swapIDBnb = msg.CalculateSwapID(randomNumberHash, bnbDeputy, addressKava.String())
 			} else {
 				if bytes.Equal(addressBnb, bnbDeputy) {
 					return fmt.Errorf("address cannot be deputy address %s", bnbDeputy)
 				}
-				swapIDBnb = binance.CalculateSwapID(randomNumberHash, addressBnb, kavaDeputy.String())
+				swapIDBnb = msg.CalculateSwapID(randomNumberHash, addressBnb, kavaDeputy.String())
 				swapIDKava = types.CalculateSwapID(randomNumberHash, kavaDeputy, addressBnb.String())
 			}
 
